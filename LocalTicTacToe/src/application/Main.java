@@ -3,11 +3,8 @@ package application;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 
 
 public class Main extends Application {
@@ -60,7 +57,7 @@ public class Main extends Application {
 		HBox hbox2 = new HBox(button20,button21,button22);
 		VBox vbox = new VBox(hbox0,hbox1,hbox2,status);
 		
-		Scene buttons = new Scene(vbox,400,400);
+		Scene buttons = new Scene(vbox,vbox.getMaxWidth(),vbox.getMaxHeight());
 		
 		primaryStage.setScene(buttons);
 		primaryStage.show();
