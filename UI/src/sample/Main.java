@@ -102,13 +102,19 @@ public class Main extends Application {
         layout4.getChildren().addAll(isWaiting,cancel);
         Scene scene4 = new Scene(layout4, 450, 450);
 
+        // user can join game if IPaddress and port are correct, and see the game board
         playGame.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 try {
+                    // retrieving ipaddress and port number from user
                     ipAddress = InetAddress.getByName(joinIP.getText());
                     port1 = Integer.parseInt(joinPort.getText());
+
+                    // binding socket to the user provided ipaddress and port number
                     joinSocket = new Socket(ipAddress, port1);
+
+                    // show the game board if the socket is connected
                     if (joinSocket.isConnected()){
                         System.out.println("Connected Successfully!!!");
                         Scene board = new Board().getScene();
@@ -121,18 +127,27 @@ public class Main extends Application {
             }
         });
 
+        // user can host a game with given IPaddress and port number, and see
+        // the game board after another player joins.
         hostGame.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 try {
+                    // retrieving ipaddress and port number from user
                     ipAddress = InetAddress.getByName(hostIP.getText());
                     port1 = Integer.parseInt(portNum.getText());
+
+                    // binding socket to the user provided ipaddress and port number
                     hostSocket = new ServerSocket(port1, 10, ipAddress);
+
+                    // checking if the socket is not closed
                     if (!hostSocket.isClosed()){
                         System.out.println("Server hosted!!");
                         Scene board = new Board().getScene();
                         primaryStage.setScene(scene4);
                         System.out.println("Waiting");
+
+                        //show user the game board once another player joins the server.
                         if (hostSocket.isBound()) {
                             primaryStage.setScene(board);
                         }
@@ -147,6 +162,12 @@ public class Main extends Application {
 
         primaryStage.setScene(scene1);
         primaryStage.show();
+        if (hostSocket != null){
+            hostSocket.close();
+        }
+        if (joinSocket != null) {
+            joinSocket.close();
+        }
     }
 
 
