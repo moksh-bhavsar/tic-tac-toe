@@ -25,6 +25,8 @@ public class Main extends Application {
 	Button button22 = new Button(" ");
 	
 	Label status = new Label("Current move: x");
+
+	Scene buttons;
 	
 	int[][] grid = new int[3][3];
 	// This will be used to store the values of the game grid
@@ -57,7 +59,7 @@ public class Main extends Application {
 		HBox hbox2 = new HBox(button20,button21,button22);
 		VBox vbox = new VBox(hbox0,hbox1,hbox2,status);
 		
-		Scene buttons = new Scene(vbox,vbox.getMaxWidth(),vbox.getMaxHeight());
+		buttons = new Scene(vbox,vbox.getMaxWidth(),vbox.getMaxHeight());
 		
 		primaryStage.setScene(buttons);
 		primaryStage.show();
@@ -190,6 +192,10 @@ public class Main extends Application {
 
 		
 		
+	}
+
+	public Scene getScene(){
+		return buttons;
 	}
 	
 	public static void main(String[] args) {

@@ -1,5 +1,6 @@
 package sample;
 
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -8,9 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
-
-import javax.swing.*;
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
 
 public class Main extends Application {
@@ -90,6 +89,19 @@ public class Main extends Application {
         layout3.getChildren().addAll(IP, port, backHost, portNum, hostIP, hostGame);
         scene3 =  new Scene(layout3, 450 ,450);
 
+        //Scene 4
+        Pane layout4 = new Pane();
+        Label isWaiting = new Label("Waiting for other player to join");
+        Font font = Font.font("Verdana", FontWeight.BOLD,12);
+        isWaiting.setFont(font);
+        Button cancel = new Button("Cancel");
+        cancel.setLayoutX(200);
+        cancel.setLayoutY(400);
+        isWaiting.setLayoutX(120);
+        isWaiting.setLayoutY(200);
+        layout4.getChildren().addAll(isWaiting,cancel);
+        Scene scene4 = new Scene(layout4, 450, 450);
+
         playGame.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -99,6 +111,8 @@ public class Main extends Application {
                     joinSocket = new Socket(ipAddress, port1);
                     if (joinSocket.isConnected()){
                         System.out.println("Connected Successfully!!!");
+                        Scene board = new Board().getScene();
+                        primaryStage.setScene(board);
                     }
 
                 } catch (IOException e) {
@@ -116,11 +130,18 @@ public class Main extends Application {
                     hostSocket = new ServerSocket(port1, 10, ipAddress);
                     if (!hostSocket.isClosed()){
                         System.out.println("Server hosted!!");
+                        Scene board = new Board().getScene();
+                        primaryStage.setScene(scene4);
+                        System.out.println("Waiting");
+                        if (hostSocket.isBound()) {
+                            primaryStage.setScene(board);
+                        }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
+
         });
 
 
