@@ -186,12 +186,10 @@ public class Main extends Application {
                     // checking if the socket is not closed
                     if (!hostSocket.isClosed()){
                         System.out.println("Server hosted!!");
-<<<<<<< HEAD
+
                         Scene board = new Board(hostSocket.accept(), true).getScene();
-                        primaryStage.setScene(scene4);
-=======
-                        Scene board = new Board().getScene();
->>>>>>> 581f72020404c18837bfecea45db11667d38f1f7
+
+
                         System.out.println("Waiting");
 
                         //show user the game board once another player joins the server.
