@@ -14,60 +14,83 @@ import java.net.*;
 
 public class Main extends Application {
 
-    Scene scene1, scene2, scene3;
+
     ServerSocket hostSocket = null;
     Socket joinSocket;
     InetAddress ipAddress = null;
     int port1;
+    private Scene mainScene, joinScene, hostScene, aboutScene;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        //Scene 1
+
+        //Main Screen
+
+        //Create labels and buttons for main screen navigation
         Label label1= new Label("Tic-Tac-Toe");
         label1.setFont(new Font("Arial", 30));
         label1.setLayoutX(140);
         label1.setLayoutY(50);
+
         Button joinButton= new Button("Join Game");
         Button hostButton = new Button("Host Game");
         Button aboutButton = new Button("About");
-        hostButton.setOnAction(actionEvent -> primaryStage.setScene(scene3));
-        joinButton.setOnAction(e -> primaryStage.setScene(scene2));
+
+        //set buttons to maneuver between screens
+        hostButton.setOnAction(actionEvent -> primaryStage.setScene(hostScene));
+
+        joinButton.setOnAction(e -> primaryStage.setScene(joinScene));
+
+        aboutButton.setOnAction(e -> primaryStage.setScene(aboutScene));
+
+
+
         Pane layout1 = new Pane();
+
         joinButton.setLayoutX(175);
         joinButton.setLayoutY(100);
         hostButton.setLayoutX(175);
         hostButton.setLayoutY(150);
         aboutButton.setLayoutX(185);
         aboutButton.setLayoutY(200);
+
         layout1.getChildren().addAll(label1, joinButton, hostButton, aboutButton);
-        scene1= new Scene(layout1, 450, 450);
+        mainScene = new Scene(layout1, 450, 450);
 
 
-        //Scene 2
+        //Join Game Screen
 
+       /* Label label2= new Label("Join Game");*/
         Button playGame= new Button("Join");
         Button joinBack = new Button("Back");
         Label IP2 = new Label("IP:");
         Label port2 = new Label("Port:");
         TextField joinPort = new TextField();
         TextField joinIP = new TextField();
-        joinBack.setOnAction(e -> primaryStage.setScene(scene1));
+
+        joinBack.setOnAction(e -> primaryStage.setScene(mainScene));
+
         Pane layout2= new Pane();
         playGame.setLayoutX(200);
         playGame.setLayoutY(400);
+        //label2.setLayoutX(390);
         IP2.setLayoutY(100);
         IP2.setFont(new Font("Arial", 20));
         port2.setLayoutY(200);
         port2.setFont(new Font("Arial", 20));
         joinIP.setLayoutY(100);
         joinPort.setLayoutY(200);
-        joinIP.setLayoutX(100);
-        joinPort.setLayoutX(100);
-        layout2.getChildren().addAll(playGame, joinBack, IP2, port2, joinPort, joinIP);
-        scene2= new Scene(layout2,450,450);
+        joinIP.setLayoutX(130);
+        joinPort.setLayoutX(130);
+
+        layout2.getChildren().addAll(/*label2,*/ playGame, joinBack, IP2, port2, joinPort, joinIP);
+        joinScene = new Scene(layout2,450,450);
+
+        playGame.setOnAction(e -> primaryStage.setScene(joinScene));
 
 
-        //Scene 3
+        // Host game screen
+
         Pane layout3 = new Pane();
         Label IP = new Label("IP:");
         Label port = new Label("Port:");
@@ -75,32 +98,52 @@ public class Main extends Application {
         TextField hostIP = new TextField();
         Button backHost = new Button("Back");
         Button hostGame = new Button("Host");
-        backHost.setOnAction(actionEvent -> primaryStage.setScene(scene1));
+
+        backHost.setOnAction(actionEvent -> primaryStage.setScene(mainScene));
+
         IP.setLayoutY(100);
         IP.setFont(new Font("Arial", 20));
         hostIP.setLayoutX(130);
         hostIP.setLayoutY(100);
         port.setLayoutY(200);
         port.setFont(new Font("Arial", 20));
-        portNum.setLayoutX(130);
         portNum.setLayoutY(200);
+        portNum.setLayoutX(130);
+
         hostGame.setLayoutX(200);
         hostGame.setLayoutY(400);
-        layout3.getChildren().addAll(IP, port, backHost, portNum, hostIP, hostGame);
-        scene3 =  new Scene(layout3, 450 ,450);
 
-        //Scene 4
-        Pane layout4 = new Pane();
-        Label isWaiting = new Label("Waiting for other player to join");
-        Font font = Font.font("Verdana", FontWeight.BOLD,12);
-        isWaiting.setFont(font);
-        Button cancel = new Button("Cancel");
-        cancel.setLayoutX(200);
-        cancel.setLayoutY(400);
-        isWaiting.setLayoutX(120);
-        isWaiting.setLayoutY(200);
-        layout4.getChildren().addAll(isWaiting,cancel);
-        Scene scene4 = new Scene(layout4, 450, 450);
+        layout3.getChildren().addAll(IP, port, backHost, portNum, hostIP,hostGame);
+        hostScene =  new Scene(layout3, 450 ,450);
+
+        // About Screen
+
+        Pane aboutLayout = new Pane();
+
+        Label descriptionTitle = new Label("Project Description:");
+        Text description = new Text("This project is a 2-player multi-threaded tic-tac-toe game that uses socket\nprogramming to connect both players." +
+                " The project was written by Alec Tozac,\nManhoor Yousaf, Moksh Bhavsar, Utsav Dwivedi.");
+
+        description.setLayoutY(50);
+
+        Label howToTitle = new Label("How to run:");
+
+        howToTitle.setLayoutY(100);
+
+        Text howTo = new Text("To run the program the user must first launch the Main application in order to\nhost or join a game. " +
+                "After this, they connect to the server through the user interface\nand begin to play the game.");
+
+        howTo.setLayoutY(150);
+
+        Button aboutBack = new Button("Back");
+
+        aboutBack.setLayoutX(200    );
+        aboutBack.setLayoutY(400);
+
+        aboutBack.setOnAction(event -> primaryStage.setScene(mainScene));
+
+        aboutLayout.getChildren().addAll(descriptionTitle, description, howToTitle, howTo, aboutBack);
+        aboutScene = new Scene(aboutLayout, 450, 450);
 
         // user can join game if IPaddress and port are correct, and see the game board
         playGame.setOnAction(new EventHandler<ActionEvent>() {
@@ -143,8 +186,12 @@ public class Main extends Application {
                     // checking if the socket is not closed
                     if (!hostSocket.isClosed()){
                         System.out.println("Server hosted!!");
+<<<<<<< HEAD
                         Scene board = new Board(hostSocket.accept(), true).getScene();
                         primaryStage.setScene(scene4);
+=======
+                        Scene board = new Board().getScene();
+>>>>>>> 581f72020404c18837bfecea45db11667d38f1f7
                         System.out.println("Waiting");
 
                         //show user the game board once another player joins the server.
@@ -160,7 +207,7 @@ public class Main extends Application {
         });
 
 
-        primaryStage.setScene(scene1);
+        primaryStage.setScene(mainScene);
         primaryStage.show();
         if (hostSocket != null){
             hostSocket.close();
