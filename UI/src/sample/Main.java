@@ -60,51 +60,60 @@ public class Main extends Application {
 
         //Join Game Screen
 
-        Label label2= new Label("Join Game");
+       /* Label label2= new Label("Join Game");*/
         Button playGame= new Button("Join");
         Button joinBack = new Button("Back");
-        Label IP2 = new Label("IP");
-        Label port2 = new Label("Port");
+        Label IP2 = new Label("IP:");
+        Label port2 = new Label("Port:");
         TextField joinPort = new TextField();
         TextField joinIP = new TextField();
 
         joinBack.setOnAction(e -> primaryStage.setScene(mainScene));
-        playGame.setOnAction(e -> primaryStage.setScene(new Scene(grid())));
 
         Pane layout2= new Pane();
         playGame.setLayoutX(200);
         playGame.setLayoutY(400);
-        label2.setLayoutX(390);
+        //label2.setLayoutX(390);
         IP2.setLayoutY(100);
         IP2.setFont(new Font("Arial", 20));
         port2.setLayoutY(200);
         port2.setFont(new Font("Arial", 20));
-        joinIP.setLayoutY(130);
-        joinPort.setLayoutY(230);
-        joinIP.setLayoutX(100);
-        joinPort.setLayoutX(100);
+        joinIP.setLayoutY(100);
+        joinPort.setLayoutY(200);
+        joinIP.setLayoutX(130);
+        joinPort.setLayoutX(130);
 
-        layout2.getChildren().addAll(label2, playGame, joinBack, IP2, port2, joinPort, joinIP);
+        layout2.getChildren().addAll(/*label2,*/ playGame, joinBack, IP2, port2, joinPort, joinIP);
         joinScene = new Scene(layout2,450,450);
+
+        playGame.setOnAction(e -> primaryStage.setScene(joinScene));
 
 
         // Host game screen
 
         Pane layout3 = new Pane();
         Label IP = new Label("IP:");
-        Label port = new Label("Port");
+        Label port = new Label("Port:");
         TextField portNum = new TextField();
+        TextField hostIP = new TextField();
         Button backHost = new Button("Back");
+        Button hostGame = new Button("Host");
 
         backHost.setOnAction(actionEvent -> primaryStage.setScene(mainScene));
 
         IP.setLayoutY(100);
         IP.setFont(new Font("Arial", 20));
+        hostIP.setLayoutX(130);
+        hostIP.setLayoutY(100);
         port.setLayoutY(200);
         port.setFont(new Font("Arial", 20));
-        portNum.setLayoutY(230);
+        portNum.setLayoutY(200);
+        portNum.setLayoutX(130);
 
-        layout3.getChildren().addAll(IP, port, backHost, portNum);
+        hostGame.setLayoutX(200);
+        hostGame.setLayoutY(400);
+
+        layout3.getChildren().addAll(IP, port, backHost, portNum, hostIP,hostGame);
         hostScene =  new Scene(layout3, 450 ,450);
 
         // About Screen
@@ -178,7 +187,6 @@ public class Main extends Application {
                     if (!hostSocket.isClosed()){
                         System.out.println("Server hosted!!");
                         Scene board = new Board().getScene();
-                        primaryStage.setScene(scene4);
                         System.out.println("Waiting");
 
                         //show user the game board once another player joins the server.
