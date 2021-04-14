@@ -1,5 +1,14 @@
 package sample;
 	
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -8,7 +17,15 @@ import javafx.scene.layout.*;
 
 
 public class Board extends Application {
+	Socket socket;
+	Boolean isHost = false;
+	
+	public Board(Socket socket, Boolean isHost) {
+		this.socket = socket;
+		this.isHost =  isHost;
+	}
 
+	
 	public String curPlayer = "x";
 	public int numMoves = 0;//end game if this reaches 9
 	
@@ -52,6 +69,39 @@ public class Board extends Application {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+		
+		
+		if (isHost) {
+			String comand = null;// declare variable to store current command
+
+			InputStream inStream;
+			try {
+				inStream = socket.getInputStream();
+				// declare an InputStream to receive client input
+				InputStreamReader reader = new InputStreamReader(inStream);// declare an InputStreamReader to read client input
+				BufferedReader in = new BufferedReader(reader);// declare BufferedReader to handle input
+				String line = null;// declare a string to store the current line
+				while ((line = in.readLine()) != null) {// loop while there is data to process
+					System.out.println(line);
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			inSockData();
+		}else{
+			PrintWriter output2;
+			try {
+				output2 = new PrintWriter(socket.getOutputStream());
+				output2.println("testing sockets by sending this line to the host");
+				output2.flush();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			outSockData(grid);
+		}
+			
 		
 		
 		HBox hbox0 = new HBox(button00,button01,button02);
@@ -284,6 +334,58 @@ public class Board extends Application {
 		button20.setDisable(false);
 		button21.setDisable(false);
 		button22.setDisable(false);
+	}
+	
+	public void getGrid() {
+		//grid = inSockData();
+	}
+	
+	public String inSockData(){
+		InputStream inStream;
+		try {
+			inStream = socket.getInputStream();
+			// declare an InputStream to receive client input
+			InputStreamReader reader = new InputStreamReader(inStream);// declare an InputStreamReader to read client input
+			BufferedReader in = new BufferedReader(reader);// declare BufferedReader to handle input
+			
+			ObjectInputStream input;
+			input = new ObjectInputStream(inStream);
+			try {
+				System.out.println("got1");
+				System.out.println(input.readObject());
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			String line = null;// declare a string to store the current line
+			while ((line = in.readLine()) != null) {// loop while there is data to process
+				System.out.println(line);
+				//grid = ast.literal_eval(line);
+				return line;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+		}
+		return "";
+	}
+	
+	public void sendGrid() {
+		outSockData(grid);
+	}
+	
+	public void outSockData(int[][] data) {
+		ObjectOutputStream output2;
+		try {
+			output2 = new ObjectOutputStream(socket.getOutputStream());
+			output2.writeObject(data);
+			output2.flush();
+			System.out.println("test data sent");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
 

@@ -117,7 +117,7 @@ public class Main extends Application {
                     // show the game board if the socket is connected
                     if (joinSocket.isConnected()){
                         System.out.println("Connected Successfully!!!");
-                        Scene board = new Board().getScene();
+                        Scene board = new Board(joinSocket, false).getScene();
                         primaryStage.setScene(board);
                     }
 
@@ -143,7 +143,7 @@ public class Main extends Application {
                     // checking if the socket is not closed
                     if (!hostSocket.isClosed()){
                         System.out.println("Server hosted!!");
-                        Scene board = new Board().getScene();
+                        Scene board = new Board(hostSocket.accept(), true).getScene();
                         primaryStage.setScene(scene4);
                         System.out.println("Waiting");
 
