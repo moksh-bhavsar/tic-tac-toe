@@ -2,9 +2,10 @@ package sample;
 	
 import java.io.*;
 import java.net.*;
-import java.util.Date;
+import java.util.Objects;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -13,7 +14,7 @@ import javafx.scene.layout.*;
 
 public class Board extends Application {
 	Socket socket;
-	Boolean isHost = false;
+	Boolean isHost;
 	public String curPlayer;
 	public String otherPlayer;
 
@@ -46,7 +47,7 @@ public class Board extends Application {
 	Button button21 = new Button(" ");
 	Button button22 = new Button(" ");
 	
-	Label status = new Label("Current move: x");
+	Label status = new Label("Current move: "+ curPlayer);
 
 	Scene buttons;
 	
@@ -69,7 +70,7 @@ public class Board extends Application {
 		try {
 			BorderPane root = new BorderPane();
 			Scene scene = new Scene(root,400,400);
-			scene.getStylesheets().add(getClass().getResource("sample.css").toExternalForm());
+			scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("sample.css")).toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch(Exception e) {
@@ -210,7 +211,7 @@ public class Board extends Application {
 		});
 		
 		button12.setOnAction(actionEvent -> {
-			button12.setDisable(true);
+
 			button12.setText(curPlayer);
 			
 			if (curPlayer == "x") {
@@ -328,8 +329,7 @@ public class Board extends Application {
 		//it will also update the UI to display a message
 		//this message will say whose turn it is or if the game is over
 		System.out.println("Num moves: " + numMoves + " +1");
-		numMoves++;
-		
+
 		/*//change curPlayer
 		if(curPlayer == "x") {
 			curPlayer = "o";
@@ -344,9 +344,11 @@ public class Board extends Application {
 				status.setText("x wins!");
 			}
 			disableGrid();
+			Platform.exit();
 		} else if (numMoves > 8){
 			status.setText("draw");
 			disableGrid();
+			Platform.exit();
 		} else {
 			status.setText("Current move: " + curPlayer);
 		}
@@ -498,8 +500,10 @@ public class Board extends Application {
 	
 	//update board and grid array with other players move
 	public void updateBoard(String x, String y, String otherPlayer) {
+		numMoves++;
 		if(x.equals("0")) {
 			if (y.equals("0")) {
+				button00.setDisable(true);
 				button00.setText(otherPlayer);
 				
 				if (otherPlayer == "x") {
@@ -603,7 +607,7 @@ public class Board extends Application {
 		
 		if(x.equals("2")) {
 			if (y.equals("0")) {
-				button00.setText(otherPlayer);
+				button20.setText(otherPlayer);
 				
 				if (otherPlayer == "x") {
 					grid[2][0] = 1;
