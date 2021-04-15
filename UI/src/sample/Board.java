@@ -6,9 +6,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Date;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -45,6 +48,7 @@ public class Board extends Application {
 
 	Scene buttons;
 	
+	
 	int[][] grid = new int[3][3];
 	// This will be used to store the values of the game grid
 	// a zero will represent a blank cell, a 1 for "x", and a 2 for "o"
@@ -71,6 +75,10 @@ public class Board extends Application {
 		}
 		
 		
+
+		
+		
+		/*
 		if (isHost) {
 			String comand = null;// declare variable to store current command
 
@@ -99,9 +107,9 @@ public class Board extends Application {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			outSockData(grid);
+			outSockData(1,2);
 		}
-			
+		*/	
 		
 		
 		HBox hbox0 = new HBox(button00,button01,button02);
@@ -112,6 +120,7 @@ public class Board extends Application {
 		buttons = new Scene(vbox,vbox.getMaxWidth(),vbox.getMaxHeight());
 
 		button00.setOnAction(actionEvent -> {
+			button00.setDisable(true);
 			button00.setText(curPlayer);
 			
 			if (curPlayer == "x") {
@@ -120,12 +129,16 @@ public class Board extends Application {
 				grid[0][0] = 2;
 			}
 			
-			button00.setDisable(true);
 			
-			nextSteps();
+			disableGrid();
+			outSockData(0,0);
+			nextSteps(true);
+			
+
 		});
 		
 		button01.setOnAction(actionEvent -> {
+			button01.setDisable(true);
 			button01.setText(curPlayer);
 			
 			if (curPlayer == "x") {
@@ -134,12 +147,14 @@ public class Board extends Application {
 				grid[0][1] = 2;
 			}
 			
-			button01.setDisable(true);
 			
-			nextSteps();
+			disableGrid();
+			outSockData(0,1);
+			nextSteps(true);
 		});
 		
 		button02.setOnAction(actionEvent -> {
+			button02.setDisable(true);
 			button02.setText(curPlayer);
 			
 			if (curPlayer == "x") {
@@ -148,12 +163,14 @@ public class Board extends Application {
 				grid[0][2] = 2;
 			}
 			
-			button02.setDisable(true);
 			
-			nextSteps();
+			disableGrid();
+			outSockData(0,2);
+			nextSteps(true);
 		});
 		
 		button10.setOnAction(actionEvent -> {
+			button10.setDisable(true);
 			button10.setText(curPlayer);
 			
 			if (curPlayer == "x") {
@@ -162,12 +179,14 @@ public class Board extends Application {
 				grid[1][0] = 2;
 			}
 			
-			button10.setDisable(true);
 			
-			nextSteps();
+			disableGrid();
+			outSockData(1,0);
+			nextSteps(true);
 		});
 		
 		button11.setOnAction(actionEvent -> {
+			button11.setDisable(true);
 			button11.setText(curPlayer);
 			
 			if (curPlayer == "x") {
@@ -176,12 +195,14 @@ public class Board extends Application {
 				grid[1][1] = 2;
 			}
 			
-			button11.setDisable(true);
 			
-			nextSteps();
+			disableGrid();
+			outSockData(1,1);
+			nextSteps(true);
 		});
 		
 		button12.setOnAction(actionEvent -> {
+			button12.setDisable(true);
 			button12.setText(curPlayer);
 			
 			if (curPlayer == "x") {
@@ -190,12 +211,14 @@ public class Board extends Application {
 				grid[1][2] = 2;
 			}
 			
-			button12.setDisable(true);
 			
-			nextSteps();
+			disableGrid();
+			outSockData(1,2);
+			nextSteps(true);
 		});
 		
 		button20.setOnAction(actionEvent -> {
+			button20.setDisable(true);
 			button20.setText(curPlayer);
 			
 			if (curPlayer == "x") {
@@ -204,12 +227,14 @@ public class Board extends Application {
 				grid[2][0] = 2;
 			}
 			
-			button20.setDisable(true);
 			
-			nextSteps();
+			disableGrid();
+			outSockData(2,0);
+			nextSteps(true);
 		});
 		
 		button21.setOnAction(actionEvent -> {
+			button21.setDisable(true);
 			button21.setText(curPlayer);
 			
 			if (curPlayer == "x") {
@@ -218,12 +243,14 @@ public class Board extends Application {
 				grid[2][1] = 2;
 			}
 			
-			button21.setDisable(true);
 			
-			nextSteps();
+			disableGrid();
+			outSockData(2,1);
+			nextSteps(true);
 		});
 		
 		button22.setOnAction(actionEvent -> {
+			button22.setDisable(true);
 			button22.setText(curPlayer);
 			
 			if (curPlayer == "x") {
@@ -232,14 +259,44 @@ public class Board extends Application {
 				grid[2][2] = 2;
 			}
 			
-			button22.setDisable(true);
 			
-			nextSteps();
+			disableGrid();
+			outSockData(2,2);
+			nextSteps(true);
 		});
 
 		
+
+		if (isHost) {
+			disableGrid();
+			status.setText("waiting on player");
+			inSockData();
+			String inCords[] = inSockData().split(",");
+			System.out.println("X: " + inCords[1]);
+			updateBoard(inCords[0],inCords[1]);
+
+		}else {
+			enableBlankGrid();
+			status.setText("Your move");
+			outSockData(-1,-1);
+		}
+		
+		/*while(true) {
+			status.setText("waiting on player");
+			String inCords[] = inSockData().split(",");
+			System.out.println("X: " + inCords[1]);
+			updateBoard(inCords[0],inCords[1]);
+		}*/
+		
+		
+		
 		
 	}
+	
+	
+	
+	
+	
 
 	public Scene getScene(){
 		Stage primaryStage = new Stage();
@@ -249,14 +306,15 @@ public class Board extends Application {
 	
 	public static void main(String[] args) {
 		launch(args);
+		
 	}
 	
-	public void nextSteps() {
+	public void nextSteps(boolean getNext) {
 		//this function will process what happens after a move is made
 		//it is responsible for ending the game when needed
 		//it will also update the UI to display a message
 		//this message will say whose turn it is or if the game is over
-		
+		System.out.println("Num moves: " + numMoves + " +1");
 		numMoves++;
 		
 		//change curPlayer
@@ -279,6 +337,11 @@ public class Board extends Application {
 		} else {
 			status.setText("Current move: " + curPlayer);
 		}
+		
+		if(getNext) {
+			getAction();
+		}
+
 	}
 	
 	
@@ -336,8 +399,44 @@ public class Board extends Application {
 		button22.setDisable(false);
 	}
 	
-	public void getGrid() {
-		//grid = inSockData();
+	public void enableBlankGrid() {
+		disableGrid();
+		if(button00.getText().length()>0) {
+			button00.setDisable(false);
+		}
+		if(button01.getText().length()>0) {
+			button01.setDisable(false);
+		}
+		if(button02.getText().length()>0) {
+			button02.setDisable(false);
+		}
+		if(button10.getText().length()>0) {
+			button10.setDisable(false);
+		}
+		if(button11.getText().length()>0) {
+			button11.setDisable(false);
+		}
+		if(button12.getText().length()>0) {
+			button12.setDisable(false);
+		}
+		if(button20.getText().length()>0) {
+			button20.setDisable(false);
+		}
+		if(button21.getText().length()>0) {
+			button21.setDisable(false);
+		}
+		if(button22.getText().length()>0) {
+			button22.setDisable(false);
+		}
+	}
+	
+	public void getAction() {
+		System.out.println("in getGrid");
+		status.setText("waiting on opp.");
+		String inCords[] = inSockData().split(",");
+		System.out.println("X: " + inCords[1]);
+		updateBoard(inCords[0],inCords[1]);
+		enableBlankGrid();
 	}
 	
 	public String inSockData(){
@@ -347,16 +446,7 @@ public class Board extends Application {
 			// declare an InputStream to receive client input
 			InputStreamReader reader = new InputStreamReader(inStream);// declare an InputStreamReader to read client input
 			BufferedReader in = new BufferedReader(reader);// declare BufferedReader to handle input
-			
-			ObjectInputStream input;
-			input = new ObjectInputStream(inStream);
-			try {
-				System.out.println("got1");
-				System.out.println(input.readObject());
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
 			String line = null;// declare a string to store the current line
 			while ((line = in.readLine()) != null) {// loop while there is data to process
 				System.out.println(line);
@@ -372,20 +462,179 @@ public class Board extends Application {
 	}
 	
 	public void sendGrid() {
-		outSockData(grid);
+		//outSockData(grid);
 	}
 	
-	public void outSockData(int[][] data) {
-		ObjectOutputStream output2;
+	public void outSockData(int x, int y) {
 		try {
-			output2 = new ObjectOutputStream(socket.getOutputStream());
-			output2.writeObject(data);
-			output2.flush();
+            OutputStream output = socket.getOutputStream();
+            PrintWriter writer = new PrintWriter(output, true);
+
+            writer.println(x + "," + y);
+            writer.flush();
+
 			System.out.println("test data sent");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	
+	public void updateBoard(String x, String y) {
+		if(x.equals("0")) {
+			if (y.equals("0")) {
+				button00.setText(curPlayer);
+				
+				if (curPlayer == "x") {
+					grid[0][0] = 1;
+				} else {
+					grid[0][0] = 2;
+				}
+				
+				button00.setDisable(true);
+				
+				nextSteps(false);
+				
+				enableBlankGrid();
+				status.setText("Your move");
+			}
+			if (y.equals("1")) {
+				button01.setText(curPlayer);
+				
+				if (curPlayer == "x") {
+					grid[0][1] = 1;
+				} else {
+					grid[0][1] = 2;
+				}
+				
+				button01.setDisable(true);
+				
+				nextSteps(false);
+				
+				enableBlankGrid();
+				status.setText("Your move");
+			}
+			if (y.equals("2")) {
+				button02.setText(curPlayer);
+				
+				if (curPlayer == "x") {
+					grid[0][2] = 1;
+				} else {
+					grid[0][2] = 2;
+				}
+				
+				button02.setDisable(true);
+				
+				nextSteps(false);
+				
+				enableBlankGrid();
+				status.setText("Your move");
+			}
+		}
+		
+		if(x.equals("1")) {
+			if (y.equals("0")) {
+				button10.setText(curPlayer);
+				
+				if (curPlayer == "x") {
+					grid[1][0] = 1;
+				} else {
+					grid[1][0] = 2;
+				}
+				
+				button10.setDisable(true);
+				
+				nextSteps(false);
+				
+				enableBlankGrid();
+				status.setText("Your move");
+			}
+			if (y.equals("1")) {
+				button11.setText(curPlayer);
+				
+				if (curPlayer == "x") {
+					grid[1][1] = 1;
+				} else {
+					grid[1][1] = 2;
+				}
+				
+				button11.setDisable(true);
+				
+				nextSteps(false);
+				
+				enableBlankGrid();
+				status.setText("Your move");
+			}
+			if (y.equals("2")) {
+				button12.setText(curPlayer);
+				
+				if (curPlayer == "x") {
+					grid[1][2] = 1;
+				} else {
+					grid[1][2] = 2;
+				}
+				
+				button12.setDisable(true);
+				
+				nextSteps(false);
+				
+				enableBlankGrid();
+				status.setText("Your move");
+			}
+		}
+		
+		if(x.equals("0")) {
+			if (y.equals("0")) {
+				button00.setText(curPlayer);
+				
+				if (curPlayer == "x") {
+					grid[0][0] = 1;
+				} else {
+					grid[0][0] = 2;
+				}
+				
+				button00.setDisable(true);
+				
+				nextSteps(false);
+				
+				enableBlankGrid();
+				status.setText("Your move");
+			}
+			if (y.equals("2")) {
+				button21.setText(curPlayer);
+				
+				if (curPlayer == "x") {
+					grid[2][1] = 1;
+				} else {
+					grid[2][1] = 2;
+				}
+				
+				button21.setDisable(true);
+				
+				nextSteps(false);
+				
+				enableBlankGrid();
+				status.setText("Your move");
+			}
+			if (y.equals("2")) {
+				button22.setText(curPlayer);
+				
+				if (curPlayer == "x") {
+					grid[2][2] = 1;
+				} else {
+					grid[2][2] = 2;
+				}
+				
+				button22.setDisable(true);
+				
+				nextSteps(false);
+				
+				enableBlankGrid();
+				status.setText("Your move");
+			}
+		}
+		
 	}
 }
 

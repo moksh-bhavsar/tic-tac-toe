@@ -65,8 +65,8 @@ public class Main extends Application {
         Button joinBack = new Button("Back");
         Label IP2 = new Label("IP:");
         Label port2 = new Label("Port:");
-        TextField joinPort = new TextField();
-        TextField joinIP = new TextField();
+        TextField joinPort = new TextField("12312");
+        TextField joinIP = new TextField("localhost");
 
         joinBack.setOnAction(e -> primaryStage.setScene(mainScene));
 
@@ -94,8 +94,8 @@ public class Main extends Application {
         Pane layout3 = new Pane();
         Label IP = new Label("IP:");
         Label port = new Label("Port:");
-        TextField portNum = new TextField();
-        TextField hostIP = new TextField();
+        TextField portNum = new TextField("12312");
+        TextField hostIP = new TextField("localhost");
         Button backHost = new Button("Back");
         Button hostGame = new Button("Host");
 
@@ -196,6 +196,8 @@ public class Main extends Application {
                         if (hostSocket.isBound()) {
                             primaryStage.setScene(board);
                         }
+                        
+                        
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
