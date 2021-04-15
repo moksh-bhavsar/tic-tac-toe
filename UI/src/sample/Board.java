@@ -1,15 +1,7 @@
 package sample;
 	
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.io.*;
+import java.net.*;
 import java.util.Date;
 
 import javafx.application.Application;
@@ -22,14 +14,21 @@ import javafx.scene.layout.*;
 public class Board extends Application {
 	Socket socket;
 	Boolean isHost = false;
-	
+	public String curPlayer;
+
 	public Board(Socket socket, Boolean isHost) {
 		this.socket = socket;
 		this.isHost =  isHost;
+		if (this.isHost){
+			curPlayer = "x";
+		}
+		else{
+			curPlayer = "o";
+		}
 	}
 
 	
-	public String curPlayer = "x";
+
 	public int numMoves = 0;//end game if this reaches 9
 	
 	Button button00 = new Button(" ");
@@ -317,12 +316,12 @@ public class Board extends Application {
 		System.out.println("Num moves: " + numMoves + " +1");
 		numMoves++;
 		
-		//change curPlayer
+		/*//change curPlayer
 		if(curPlayer == "x") {
 			curPlayer = "o";
 		} else {
 			curPlayer = "x";
-		}
+		}*/
 		
 		if (checkWinner()) {
 			if(curPlayer == "x") {
@@ -473,7 +472,7 @@ public class Board extends Application {
             writer.println(x + "," + y);
             writer.flush();
 
-			System.out.println("test data sent");
+			//System.out.println("test data sent");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
