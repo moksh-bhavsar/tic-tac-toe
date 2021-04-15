@@ -119,9 +119,10 @@ public class Board extends Application {
 		buttons = new Scene(vbox,vbox.getMaxWidth(),vbox.getMaxHeight());
 
 		button00.setOnAction(actionEvent -> {
-			button00.setDisable(true);
-			button00.setText(curPlayer);
+			button00.setDisable(true);//disable the selected button
+			button00.setText(curPlayer);//set text to x or o
 			
+			//set array to 1 or 2 depending on if player is x or o (used to check if there's a winner)
 			if (curPlayer == "x") {
 				grid[0][0] = 1;
 			} else {
@@ -129,9 +130,9 @@ public class Board extends Application {
 			}
 			
 			
-			disableGrid();
-			outSockData(0,0);
-			nextSteps(true);
+			disableGrid();//function to disable input for the grid
+			outSockData(0,0);//function to send grid coordinates to the other player
+			nextSteps(true);//call function to check winner, set curPlayer var, and wait for players next move
 			
 
 		});
@@ -266,10 +267,11 @@ public class Board extends Application {
 
 		
 
+		//this is supposed to be some sort of initialization
 		if (isHost) {
 			disableGrid();
 			status.setText("waiting on player");
-			inSockData();
+			inSockData();//get data from other player and do nothing with it
 			String inCords[] = inSockData().split(",");
 			System.out.println("X: " + inCords[1]);
 			updateBoard(inCords[0],inCords[1]);
@@ -277,7 +279,7 @@ public class Board extends Application {
 		}else {
 			enableBlankGrid();
 			status.setText("Your move");
-			outSockData(-1,-1);
+			outSockData(-1,-1);//send data for other player to do nothing with (did this to test the connection)
 		}
 		
 		/*while(true) {
@@ -337,12 +339,11 @@ public class Board extends Application {
 			status.setText("Current move: " + curPlayer);
 		}
 		
-		if(getNext) {
+		if(getNext) {//if boolean passed is true, call function to wait for other players move
 			getAction();
 		}
 
 	}
-	
 	
 	public boolean checkWinner() {
 		for (int i=1; i <= 2; i++) {
@@ -398,6 +399,7 @@ public class Board extends Application {
 		button22.setDisable(false);
 	}
 	
+	//this function is supposed to enable only blank cells
 	public void enableBlankGrid() {
 		disableGrid();
 		if(button00.getText().length()>0) {
@@ -429,6 +431,7 @@ public class Board extends Application {
 		}
 	}
 	
+	//this function will get the players next move then pass the coordinates to the updateBoard function
 	public void getAction() {
 		System.out.println("in getGrid");
 		status.setText("waiting on opp.");
@@ -464,6 +467,7 @@ public class Board extends Application {
 		//outSockData(grid);
 	}
 	
+	//send data to the other player (grid cooridnates)
 	public void outSockData(int x, int y) {
 		try {
             OutputStream output = socket.getOutputStream();
@@ -479,21 +483,22 @@ public class Board extends Application {
 		}
 	}
 	
-	
+	//update board and grid array with other players move
 	public void updateBoard(String x, String y) {
 		if(x.equals("0")) {
 			if (y.equals("0")) {
 				button00.setText(curPlayer);
 				
 				if (curPlayer == "x") {
-					grid[0][0] = 1;
+					grid[0][0] = 1;//set grid array (only used to check if theres a winner)
 				} else {
 					grid[0][0] = 2;
 				}
 				
 				button00.setDisable(true);
 				
-				nextSteps(false);
+				nextSteps(false);//call nextSteps function to see if anyone won
+				//false is passed so that we do not wait for the other players move, as it's this clients turn
 				
 				enableBlankGrid();
 				status.setText("Your move");
