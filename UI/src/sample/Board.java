@@ -34,7 +34,8 @@ public class Board extends Application {
 	
 
 	public int numMoves = 0;//end game if this reaches 9
-	
+
+	// creating a grid of buttons to act as board of tic-tac-toe
 	Button button00 = new Button(" ");
 	Button button01 = new Button(" ");
 	Button button02 = new Button(" ");
@@ -76,45 +77,7 @@ public class Board extends Application {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		
-		
 
-		
-		
-		/*
-		if (isHost) {
-			String comand = null;// declare variable to store current command
-
-			InputStream inStream;
-			try {
-				inStream = socket.getInputStream();
-				// declare an InputStream to receive client input
-				InputStreamReader reader = new InputStreamReader(inStream);// declare an InputStreamReader to read client input
-				BufferedReader in = new BufferedReader(reader);// declare BufferedReader to handle input
-				String line = null;// declare a string to store the current line
-				while ((line = in.readLine()) != null) {// loop while there is data to process
-					System.out.println(line);
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			inSockData();
-		}else{
-			PrintWriter output2;
-			try {
-				output2 = new PrintWriter(socket.getOutputStream());
-				output2.println("testing sockets by sending this line to the host");
-				output2.flush();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			outSockData(1,2);
-		}
-		*/	
-		
-		
 		HBox hbox0 = new HBox(button00,button01,button02);
 		HBox hbox1 = new HBox(button10,button11,button12);
 		HBox hbox2 = new HBox(button20,button21,button22);
@@ -133,7 +96,7 @@ public class Board extends Application {
 				grid[0][0] = 2;
 			}
 			
-			
+
 			disableGrid();//function to disable input for the grid
 			outSockData(0,0);//function to send grid coordinates to the other player
 			updateBoard("0","0",curPlayer);
@@ -294,17 +257,6 @@ public class Board extends Application {
 			status.setText("Your move");
 			outSockData(-1,-1);//send data for other player to do nothing with (did this to test the connection)
 		}
-		
-		/*while(true) {
-			status.setText("waiting on player");
-			String inCords[] = inSockData().split(",");
-			System.out.println("X: " + inCords[1]);
-			updateBoard(inCords[0],inCords[1]);
-		}*/
-		
-		
-		
-		
 	}
 	
 	
@@ -358,7 +310,8 @@ public class Board extends Application {
 		}
 
 	}
-	
+
+	// function used to determine if there is a winner
 	public boolean checkWinner() {
 		for (int i=1; i <= 2; i++) {
 			if (grid[0][0] == i && grid[0][1] == i && grid[0][2] == i) {
@@ -388,7 +341,8 @@ public class Board extends Application {
 		}
 		return false;
 	}
-	
+
+	// disable the whole grid while the other player makes his move
 	public void disableGrid() {
 		button00.setDisable(true);
 		button01.setDisable(true);
@@ -477,11 +431,7 @@ public class Board extends Application {
 		}
 		return "";
 	}
-	
-	public void sendGrid() {
-		//outSockData(grid);
-	}
-	
+
 	//send data to the other player (grid cooridnates)
 	public void outSockData(int x, int y) {
 		try {
