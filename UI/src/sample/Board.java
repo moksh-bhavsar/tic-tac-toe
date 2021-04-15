@@ -15,15 +15,18 @@ public class Board extends Application {
 	Socket socket;
 	Boolean isHost = false;
 	public String curPlayer;
+	public String otherPlayer;
 
 	public Board(Socket socket, Boolean isHost) {
 		this.socket = socket;
 		this.isHost =  isHost;
 		if (this.isHost){
 			curPlayer = "x";
+			otherPlayer = "o";
 		}
 		else{
 			curPlayer = "o";
+			otherPlayer = "x";
 		}
 	}
 
@@ -132,6 +135,7 @@ public class Board extends Application {
 			
 			disableGrid();//function to disable input for the grid
 			outSockData(0,0);//function to send grid coordinates to the other player
+			updateBoard("0","0",curPlayer);
 			nextSteps(true);//call function to check winner, set curPlayer var, and wait for players next move
 			
 
@@ -150,6 +154,7 @@ public class Board extends Application {
 			
 			disableGrid();
 			outSockData(0,1);
+			updateBoard("0","1",curPlayer);
 			nextSteps(true);
 		});
 		
@@ -166,6 +171,7 @@ public class Board extends Application {
 			
 			disableGrid();
 			outSockData(0,2);
+			updateBoard("0","2",curPlayer);
 			nextSteps(true);
 		});
 		
@@ -182,6 +188,7 @@ public class Board extends Application {
 			
 			disableGrid();
 			outSockData(1,0);
+			updateBoard("1","0",curPlayer);
 			nextSteps(true);
 		});
 		
@@ -198,6 +205,7 @@ public class Board extends Application {
 			
 			disableGrid();
 			outSockData(1,1);
+			updateBoard("1","1",curPlayer);
 			nextSteps(true);
 		});
 		
@@ -214,6 +222,7 @@ public class Board extends Application {
 			
 			disableGrid();
 			outSockData(1,2);
+			updateBoard("1","2",curPlayer);
 			nextSteps(true);
 		});
 		
@@ -230,6 +239,7 @@ public class Board extends Application {
 			
 			disableGrid();
 			outSockData(2,0);
+			updateBoard("2","0",curPlayer);
 			nextSteps(true);
 		});
 		
@@ -246,6 +256,7 @@ public class Board extends Application {
 			
 			disableGrid();
 			outSockData(2,1);
+			updateBoard("2","1",curPlayer);
 			nextSteps(true);
 		});
 		
@@ -262,6 +273,7 @@ public class Board extends Application {
 			
 			disableGrid();
 			outSockData(2,2);
+			updateBoard("2","2",curPlayer);
 			nextSteps(true);
 		});
 
@@ -274,7 +286,7 @@ public class Board extends Application {
 			inSockData();//get data from other player and do nothing with it
 			String inCords[] = inSockData().split(",");
 			System.out.println("X: " + inCords[1]);
-			updateBoard(inCords[0],inCords[1]);
+			updateBoard(inCords[0],inCords[1], otherPlayer);
 
 		}else {
 			enableBlankGrid();
@@ -436,8 +448,9 @@ public class Board extends Application {
 		System.out.println("in getGrid");
 		status.setText("waiting on opp.");
 		String inCords[] = inSockData().split(",");
-		System.out.println("X: " + inCords[1]);
-		updateBoard(inCords[0],inCords[1]);
+		System.out.println("X: " + inCords[0]);
+		System.out.println("Y: " + inCords[1]);
+		updateBoard(inCords[0],inCords[1],otherPlayer);
 		enableBlankGrid();
 	}
 	
@@ -484,12 +497,12 @@ public class Board extends Application {
 	}
 	
 	//update board and grid array with other players move
-	public void updateBoard(String x, String y) {
+	public void updateBoard(String x, String y, String otherPlayer) {
 		if(x.equals("0")) {
 			if (y.equals("0")) {
-				button00.setText(curPlayer);
+				button00.setText(otherPlayer);
 				
-				if (curPlayer == "x") {
+				if (otherPlayer == "x") {
 					grid[0][0] = 1;//set grid array (only used to check if theres a winner)
 				} else {
 					grid[0][0] = 2;
@@ -504,9 +517,9 @@ public class Board extends Application {
 				status.setText("Your move");
 			}
 			if (y.equals("1")) {
-				button01.setText(curPlayer);
+				button01.setText(otherPlayer);
 				
-				if (curPlayer == "x") {
+				if (otherPlayer == "x") {
 					grid[0][1] = 1;
 				} else {
 					grid[0][1] = 2;
@@ -520,9 +533,9 @@ public class Board extends Application {
 				status.setText("Your move");
 			}
 			if (y.equals("2")) {
-				button02.setText(curPlayer);
+				button02.setText(otherPlayer);
 				
-				if (curPlayer == "x") {
+				if (otherPlayer == "x") {
 					grid[0][2] = 1;
 				} else {
 					grid[0][2] = 2;
@@ -539,9 +552,9 @@ public class Board extends Application {
 		
 		if(x.equals("1")) {
 			if (y.equals("0")) {
-				button10.setText(curPlayer);
+				button10.setText(otherPlayer);
 				
-				if (curPlayer == "x") {
+				if (otherPlayer == "x") {
 					grid[1][0] = 1;
 				} else {
 					grid[1][0] = 2;
@@ -555,9 +568,9 @@ public class Board extends Application {
 				status.setText("Your move");
 			}
 			if (y.equals("1")) {
-				button11.setText(curPlayer);
+				button11.setText(otherPlayer);
 				
-				if (curPlayer == "x") {
+				if (otherPlayer == "x") {
 					grid[1][1] = 1;
 				} else {
 					grid[1][1] = 2;
@@ -571,9 +584,9 @@ public class Board extends Application {
 				status.setText("Your move");
 			}
 			if (y.equals("2")) {
-				button12.setText(curPlayer);
+				button12.setText(otherPlayer);
 				
-				if (curPlayer == "x") {
+				if (otherPlayer == "x") {
 					grid[1][2] = 1;
 				} else {
 					grid[1][2] = 2;
@@ -588,14 +601,14 @@ public class Board extends Application {
 			}
 		}
 		
-		if(x.equals("0")) {
+		if(x.equals("2")) {
 			if (y.equals("0")) {
-				button00.setText(curPlayer);
+				button00.setText(otherPlayer);
 				
-				if (curPlayer == "x") {
-					grid[0][0] = 1;
+				if (otherPlayer == "x") {
+					grid[2][0] = 1;
 				} else {
-					grid[0][0] = 2;
+					grid[2][0] = 2;
 				}
 				
 				button00.setDisable(true);
@@ -605,10 +618,10 @@ public class Board extends Application {
 				enableBlankGrid();
 				status.setText("Your move");
 			}
-			if (y.equals("2")) {
-				button21.setText(curPlayer);
+			if (y.equals("1")) {
+				button21.setText(otherPlayer);
 				
-				if (curPlayer == "x") {
+				if (otherPlayer == "x") {
 					grid[2][1] = 1;
 				} else {
 					grid[2][1] = 2;
@@ -622,9 +635,9 @@ public class Board extends Application {
 				status.setText("Your move");
 			}
 			if (y.equals("2")) {
-				button22.setText(curPlayer);
+				button22.setText(otherPlayer);
 				
-				if (curPlayer == "x") {
+				if (otherPlayer == "x") {
 					grid[2][2] = 1;
 				} else {
 					grid[2][2] = 2;
